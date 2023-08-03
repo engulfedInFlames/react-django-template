@@ -1,21 +1,21 @@
 version: "3.8"
 
 services:
-  # frontend:
-  #   stdin_open: true
-  #   build:
-  #     context: ./front
-  #     dockerfile: Dockerfile.dev
-  #   volumes:
-  #     - ./front/src:/app/src
-  #   env_file:
-  #     - ./.env
-  #   environment:
-  #     - WATCHPACK_POLLING=true
-  #   command: sh -c "npm start"
-  #   ports:
-  #     - 3000:3000
-  #   container_name: frontend
+  frontend:
+    stdin_open: true
+    build:
+      context: ./front
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./front/src:/app/src
+    env_file:
+      - ./.env
+    environment:
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm start"
+    ports:
+      - 3000:3000
+    container_name: frontend
 
   backend:
     build:
