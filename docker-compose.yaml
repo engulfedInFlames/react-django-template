@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  # frontend:
+  #   stdin_open: true
+  #   build:
+  #     context: ./front
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./front/src:/app/src
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     - WATCHPACK_POLLING=true
+  #   command: sh -c "npm start"
+  #   ports:
+  #     - 3000:3000
+  #   container_name: frontend
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./back:/app
+    env_file:
+      - ./.env
+    command: sh -c "chmod +x /app/sh/entrypoint.sh && chmod +x /app/sh/migrate.sh && sh /app/sh/migrate.sh && sh /app/sh/entrypoint.sh"
+    ports:
+      - 8000:8000
+    restart: always
+    container_name: backend
+    depends_on:
+      - db
+
+  db:
+    image: postgres:alpine
+    command: -p 5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    container_name: db
+
+volumes:
+  postgres_data:
